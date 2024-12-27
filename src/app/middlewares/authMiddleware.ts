@@ -10,10 +10,11 @@ import config from '../config';
 const authMiddleware = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(' ')[1]; // Bearer <token>
+    
     if (!token) {
       throw new AppError(
         httpStatus.UNAUTHORIZED,
-        'Token is missing or malformed',
+        'Token is missing or UnAuthorized Access!!',
       );
     }
 

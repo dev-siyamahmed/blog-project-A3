@@ -6,5 +6,6 @@ import { ROLE } from '../../constant/constant';
 const router = express.Router();
 
 router.post('/', authMiddleware(ROLE.user), BlogControllers.createBlog);
+router.patch('/:id', authMiddleware(ROLE.user), BlogControllers.updateBlog);
 
 export const BlogRoute = router;
