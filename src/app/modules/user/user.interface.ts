@@ -1,7 +1,8 @@
-import { Model } from "mongoose";
-import { ROLE } from "../../constant/constant";
+import { Model } from 'mongoose';
+import { ROLE } from '../../constant/constant';
 
 export type TUser = {
+  _id?: string;
   name: string;
   email: string;
   password: string;
@@ -11,12 +12,13 @@ export type TUser = {
   updatedAt: Date;
 };
 
-
-export interface TUserModel extends Model<TUser>{
+export interface TUserModel extends Model<TUser> {
   isUserExistsByCustomId(email: string): Promise<TUser>;
 
-  isPasswordValidation(plainTextPassword:string , hashPassword:string):Promise<boolean>
+  isPasswordValidation(
+    plainTextPassword: string,
+    hashPassword: string,
+  ): Promise<boolean>;
 }
 
-
-export type TUserRole = keyof typeof ROLE
+export type TUserRole = keyof typeof ROLE;

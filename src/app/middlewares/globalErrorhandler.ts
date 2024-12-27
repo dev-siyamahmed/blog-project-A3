@@ -8,7 +8,6 @@ import handleDuplicateError from '../errors/handleDuplicateError';
 import AppError from '../errors/AppError';
 import config from '../config';
 
-
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   //setting default values
   let statusCode = 500;

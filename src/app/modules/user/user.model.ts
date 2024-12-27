@@ -5,9 +5,9 @@ import config from '../../config';
 
 const UserSchema: Schema = new Schema<TUser>(
   {
-    name: { type: String, },
-    email: { type: String, required: true, },
-    password: { type: String, required: true, select: 0, },
+    name: { type: String },
+    email: { type: String, required: true },
+    password: { type: String, required: true, select: 0 },
     role: { type: String, enum: ['admin', 'user'], default: 'user' },
     isBlocked: { type: Boolean, default: false },
   },
@@ -33,15 +33,15 @@ UserSchema.post('save', function (doc, next) {
   next();
 });
 
-UserSchema.statics.isUserExistsByCustomId = (async function (email: string) {
-  return UserModel.findOne({ email }).select("+password")
-})
+UserSchema.statics.isUserExistsByCustomId = async function (email: string) {
+  return UserModel.findOne({ email }).select('+password');
+};
 
-UserSchema.statics.isPasswordValidation = (async function (plainTextPassword: string, hashPassword: string) {
-  return await bcrypt.compare(plainTextPassword, hashPassword)
-})
-
-
-
+UserSchema.statics.isPasswordValidation = async function (
+  plainTextPassword: string,
+  hashPassword: string,
+) {
+  return await bcrypt.compare(plainTextPassword, hashPassword);
+};
 
 export const UserModel = model<TUser, TUserModel>('User', UserSchema);

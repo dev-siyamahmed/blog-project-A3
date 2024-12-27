@@ -8,51 +8,52 @@ import { UserModel } from '../modules/user/user.model';
 import config from '../config';
 
 const authMiddleware = (...requiredRoles: TUserRole[]) => {
-    return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.headers.authorization?.split(' ')[1]; // Bearer <token>
+    if (!token) {
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        'Token is missing or malformed',
+      );
+    }
 
-        const token = req.headers.authorization?.split(' ')[1]; // Bearer <token>
-        if (!token) {
-            throw new AppError(httpStatus.UNAUTHORIZED, 'Token is missing or malformed');
-        }
+    // checking if the token is missing
+    if (!token) {
+      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
+    }
 
-        // checking if the token is missing
-        if (!token) {
-            throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
-        }
+    // checking if the given token is valid
+    const decoded = jwt.verify(
+      token,
+      config.jwt_access_secret_key as string,
+    ) as JwtPayload;
 
-        // checking if the given token is valid
-        const decoded = jwt.verify(
-            token,
-            config.jwt_access_secret_key as string,
-        ) as JwtPayload;
+    const { role, iat, userId } = decoded;
 
-        const { role, userEmail, iat } = decoded;
-   
-        // checking if the user is exist
-        const user = await UserModel.isUserExistsByCustomId(userEmail);
+    // checking if the user is exist
+    const user = await UserModel.findById(userId);
 
-        if (!user) {
-            throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
-        }
-        // checking if the user is already isBlocked
+    if (!user) {
+      throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
+    }
+    // checking if the user is already isBlocked
 
-        const isBlocked = user?.isBlocked;
+    const isBlocked = user?.isBlocked;
 
-        if (isBlocked) {
-            throw new AppError(httpStatus.FORBIDDEN, 'This user is Blocked !');
-        }
+    if (isBlocked) {
+      throw new AppError(httpStatus.FORBIDDEN, 'This user is Blocked !');
+    }
 
+    if (requiredRoles && !requiredRoles.includes(role)) {
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        'You are  unAuthorized  Person!',
+      );
+    }
 
-        if (requiredRoles && !requiredRoles.includes(role)) {
-            throw new AppError(
-                httpStatus.UNAUTHORIZED,
-                'You are  unAuthorized  Person!',
-            );
-        }
-
-        req.user = decoded as JwtPayload;
-        next();
-    });
+    req.user = decoded as JwtPayload;
+    next();
+  });
 };
 
 export default authMiddleware;
