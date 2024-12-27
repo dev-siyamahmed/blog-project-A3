@@ -1,3 +1,6 @@
+import { Model } from "mongoose";
+import { ROLE } from "../../constant/constant";
+
 export type TUser = {
   name: string;
   email: string;
@@ -7,3 +10,13 @@ export type TUser = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+
+export interface TUserModel extends Model<TUser>{
+  isUserExistsByCustomId(email: string): Promise<TUser>;
+
+  isPasswordValidation(plainTextPassword:string , hashPassword:string):Promise<boolean>
+}
+
+
+export type TUserRole = keyof typeof ROLE

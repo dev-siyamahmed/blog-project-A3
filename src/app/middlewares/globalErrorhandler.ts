@@ -1,14 +1,15 @@
 import { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
-import config from '../config';
-import AppError from '../errors/AppError';
+import { TErrorSources } from '../interface/error';
+import handleZodError from '../errors/handleZodError';
+import handleValidationError from '../errors/handleValidationError';
 import handleCastError from '../errors/handleCastError';
 import handleDuplicateError from '../errors/handleDuplicateError';
-import handleValidationError from '../errors/handleValidationError';
-import handleZodError from '../errors/handleZodError';
-import { TErrorSources } from '../interface/error';
+import AppError from '../errors/AppError';
+import config from '../config';
 
-const globalErrorHandler: ErrorRequestHandler = (err, req, res,) => {
+
+const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   //setting default values
   let statusCode = 500;
   let message = 'Something went wrong!';
@@ -62,8 +63,7 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res,) => {
   return res.status(statusCode).json({
     success: false,
     message,
-    errorSources,
-    err,
+    error: errorSources,
     stack: config.node_env === 'development' ? err?.stack : null,
   });
 };
