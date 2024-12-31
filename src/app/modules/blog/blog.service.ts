@@ -38,7 +38,27 @@ const updateBlogIntoDB = async (id: string, payload: Partial<TBlog>, userId: str
   return { updatedBlog, author };
 };
 
+
+const deleteBlogFromDB = async (blogId: string, userId: string) => {
+
+  const blog = await BlogModel.findById(blogId)
+
+  if (!blog) {
+    throw new AppError(httpStatus.NOT_FOUND, "Blog Not Found")
+  }
+
+  if (blog.author.toString() !== userId) {
+    throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized to delete this blog")
+  }
+
+  const result = await BlogModel.findByIdAndDelete(blogId);
+
+  return result
+
+}
+
 export const BlogServices = {
   createBlogIntoDB,
-  updateBlogIntoDB
+  updateBlogIntoDB,
+  deleteBlogFromDB
 };
