@@ -14,7 +14,7 @@ The goal of this project is to develop a backend for a blogging platform where u
 
  -Express.js
 
- -MongoDB with Mongoose
+ -MongoDB with Mongoose and `etc`
 
 
 ## Features
@@ -32,29 +32,29 @@ The goal of this project is to develop a backend for a blogging platform where u
 
 2. **User Role**
 
- -Can register and log in.
+   -Can register and log in.
 
- -Can create, update, and delete their own blogs.
+   -Can create, update, and delete their own blogs.
 
- -Cannot perform admin actions.
+   -Cannot perform admin actions.
 
 3. **Authentication & Authorization**
 
- -Authentication: Users must log in to perform any write, update, or delete operations.
+   -Authentication: Users must log in to perform any write, update, or delete operations.
 
- -Authorization: Role-based access control ensures Admins and Users can only perform actions permitted by their roles.
+   -Authorization: Role-based access control ensures Admins and Users can only perform actions permitted by their roles.
 
 4. **Blog API**
 
- -Publicly accessible API to view blogs.
+   -Publicly accessible API to view blogs.
 
-`Supports`:
+   `Supports`:
 
- -Search: Filter blogs by title or content.
+   -Search: Filter blogs by title or content.
 
- -Sorting: Sort blogs by fields like createdAt or title.
+   -Sorting: Sort blogs by fields like createdAt or title.
 
- -Filtering: Filter blogs by author or other attributes.
+   -Filtering: Filter blogs by author or other attributes.
 
 
 ## Installation $ Scripts
