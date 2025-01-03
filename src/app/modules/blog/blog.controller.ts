@@ -5,6 +5,8 @@ import httpStatus from 'http-status';
 
 const createBlog = catchAsync(async (req, res) => {
   const userId = req.user.userId;
+  console.log(req.user);
+
   const { result, author } = await BlogServices.createBlogIntoDB(
     req.body,
     userId,
@@ -23,12 +25,11 @@ const createBlog = catchAsync(async (req, res) => {
   });
 });
 
-
 const updateBlog = catchAsync(async (req, res) => {
   const userId = req.user.userId;
-  const { id } = req.params
+  const { id } = req.params;
   const payload = req.body;
-  const result = await BlogServices.updateBlogIntoDB(id, payload, userId,);
+  const result = await BlogServices.updateBlogIntoDB(id, payload, userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -40,13 +41,30 @@ const updateBlog = catchAsync(async (req, res) => {
 
 const deleteBlog = catchAsync(async (req, res) => {
   const userId = req.user.userId;
-  const { id } = req.params
-  const result = await BlogServices.deleteBlogFromDB(id, userId,);
+  const { id } = req.params;
+  await BlogServices.deleteBlogFromDB(id, userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Blog deleted successfully',
+    data: {},
+  });
+});
+
+const getAllBlog = catchAsync(async (req, res) => {
+  const { search, sortBy, sortOrder, filter } = req.query;
+  const result = await BlogServices.getAllBlogFromDB({
+    search,
+    sortBy,
+    sortOrder,
+    filter,
+  });
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Blogs fetched successfully',
     data: result,
   });
 });
@@ -54,5 +72,6 @@ const deleteBlog = catchAsync(async (req, res) => {
 export const BlogControllers = {
   createBlog,
   updateBlog,
-  deleteBlog
+  deleteBlog,
+  getAllBlog,
 };

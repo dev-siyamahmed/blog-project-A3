@@ -38,7 +38,7 @@ const loginUserFromDB = async (payload: TLoginUser) => {
     user?.password,
   );
   if (!isValidPassword) {
-    throw new AppError(httpStatus.FORBIDDEN, 'Password is Invalid');
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Password is Invalid');
   }
 
   //create token and sent to the  client
