@@ -48,14 +48,14 @@ const loginUserFromDB = async (payload: TLoginUser) => {
     userId: user._id as string,
   };
 
-  const Token = createToken(
+  const token = createToken(
     jwtPayload,
     config.jwt_access_secret_key as string,
     config.jwt_access_expires_in as string,
   );
 
   return {
-    Token,
+    token,
   };
 };
 
