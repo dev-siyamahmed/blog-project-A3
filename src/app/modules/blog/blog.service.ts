@@ -61,7 +61,9 @@ const deleteBlogFromDB = async (blogId: string, userId: string) => {
   return result;
 };
 
-const getAllBlogFromDB = async ({ search, sortBy, sortOrder, filter }: any) => {
+
+const getAllBlogFromDB = async ({ search, sortBy = 'createdAt', sortOrder = 'asc', filter }: any) => {
+  // Search condition
   const searchCondition = search
     ? {
         $or: [
@@ -71,19 +73,22 @@ const getAllBlogFromDB = async ({ search, sortBy, sortOrder, filter }: any) => {
       }
     : {};
 
+  // Filter condition
   const filterCondition = filter ? { author: filter } : {};
 
+  // Sort condition
   const sortCondition: any = {};
   if (sortBy) {
     sortCondition[sortBy] = sortOrder === 'asc' ? 1 : -1;
   }
 
   const blogs = await BlogModel.find({ ...searchCondition, ...filterCondition })
-    .sort(sortCondition)
-    .populate('author', 'name email');
+    .sort(sortCondition) 
+    .populate('author', 'name email'); 
 
   return blogs;
 };
+
 
 export const BlogServices = {
   createBlogIntoDB,
